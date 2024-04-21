@@ -8,8 +8,10 @@ export default function Home() {
     <div className="flex min-h-screen flex-col items-center p-4">
       <Navbar />
       <main className="flex flex-col items-center pt-24 px-4 w-full">
-        <AddTask />
-        <Navigate />
+        <div className="flex items-center flex-col max-w-[70em] w-full md:relative">
+          <AddTask />
+          <Navigate />
+        </div>
         <TaskContent />
       </main>
     </div>

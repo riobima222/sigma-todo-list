@@ -24,7 +24,7 @@ export default function Navbar() {
             height={50}
           />
           {/* <CgProfile className="text-5xl" /> */}
-          <p className="text-sm mt-1">User name</p>
+          <p className="flex justify-center text-sm mt-1">User name</p>
         </div>
         <button
           type="button"
