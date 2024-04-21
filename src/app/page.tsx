@@ -1,5 +1,6 @@
 import AddTask from "@/components/addTask";
 import Navbar from "@/components/navbar";
+import Navigate from "@/components/navigate";
 import TaskContent from "@/components/taskContent";
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
       <Navbar />
       <main className="flex flex-col items-center pt-24 px-4 w-full">
         <AddTask />
+        <Navigate />
         <TaskContent />
       </main>
     </div>
