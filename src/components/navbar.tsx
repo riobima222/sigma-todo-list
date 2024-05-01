@@ -1,9 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import { PiBookBookmarkFill } from "react-icons/pi";
-import { CgProfile } from "react-icons/cg";
 import Link from "next/link";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function Navbar() {
+  const { data: session }: any = useSession();
   return (
     <nav className="fixed justify-between sm:ps-2 flex items-center top-0 min-h-20 left-0 right-0 bg-[#acffea]">
       <div className="flex">
@@ -17,27 +20,72 @@ export default function Navbar() {
       </div>
       <div className="flex items-center">
         <div className="flex flex-col items-center mt-1">
-          <Image
-            src={"/images/profile-woman.png"}
-            alt="Profile images"
-            width={50}
-            height={50}
-          />
-          {/* <CgProfile className="text-5xl" /> */}
-          <p className="flex justify-center text-sm mt-1">User name</p>
+          {session ? (
+            <>
+              {session.user?.login == "google" ? (
+                <Image
+                  className="rounded-full"
+                  src={session.user?.image || "/images/profile-man.png"}
+                  alt="Profile images"
+                  width={50}
+                  height={50}
+                />
+              ) : (
+                <Image
+                  className="rounded-full"
+                  src={`${
+                    session.user?.gender == "man"
+                      ? "/images/profile-man.png"
+                      : "/images/profile-woman.png"
+                  }`}
+                  alt="Profile images"
+                  width={50}
+                  height={50}
+                />
+              )}
+              <p className="flex justify-center text-sm mt-1 mb-1 tracking-widest">
+                {session.user?.username || session.user?.name}
+              </p>
+            </>
+          ) : (
+            <span className="inline-block ms-4 loading loading-spinner text-info"></span>
+          )}
         </div>
-        <button
-          type="button"
-          className="sm:hidden text-[#f6fff9] bg-[#6efb6e] font-bold m-1 me-2 ms-4 px-2 rounded-xl py-2"
-        >
-          Log <br /> in
-        </button>
-        <button
-          type="button"
-          className="text-[#f6fff9] font-bold bg-[#6efb6e] px-4 py-1 ms-4 me-2 rounded-xl hidden sm:inline-block"
-        >
-          Log in
-        </button>
+        {session ? (
+          <>
+            <button
+              onClick={() => signOut()}
+              type="button"
+              className="sm:hidden text-[#f6fff9] bg-[#6efb6e] font-bold m-1 me-2 ms-4 px-2 rounded-xl py-2"
+            >
+              Log <br /> Out
+            </button>
+            <button
+              onClick={() => signOut()}
+              type="button"
+              className="text-[#f6fff9] font-bold bg-[#6efb6e] px-4 py-1 ms-4 me-2 rounded-xl hidden sm:inline-block"
+            >
+              Log Out
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={() => signIn()}
+              type="button"
+              className="sm:hidden text-[#f6fff9] bg-[#6efb6e] font-bold m-1 me-2 ms-4 px-2 rounded-xl py-2"
+            >
+              Log <br /> in
+            </button>
+            <button
+              onClick={() => signIn()}
+              type="button"
+              className="text-[#f6fff9] font-bold bg-[#6efb6e] px-4 py-1 ms-4 me-2 rounded-xl hidden sm:inline-block"
+            >
+              Log in
+            </button>
+          </>
+        )}
       </div>
     </nav>
   );

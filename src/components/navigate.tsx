@@ -1,19 +1,12 @@
 "use client";
 import { MdHistory } from "react-icons/md";
 import { FaTasks } from "react-icons/fa";
-import { useState } from "react";
+import { useContext } from "react";
+import { navigatecontext } from "@/context/navigate";
 
 export default function Navigate() {
-  const [selectTask, setSelectTask] = useState(true);
-  const [selectHist, setSelectHist] = useState(false);
-  const handleSelectTask = () => {
-    setSelectTask(true);
-    setSelectHist(false);
-  };
-  const handleSelectHist = () => {
-    setSelectHist(true);
-    setSelectTask(false);
-  };
+  const { selectHist, selectTask, handleSelectHist, handleSelectTask }: any =
+    useContext(navigatecontext);
   return (
     <section className="md:absolute md:top-0 md:left-0 md:mt-0 md:ms-0 md:max-w-none md:w-[10em] md:flex-col md:gap-3 flex mt-4 mb-3 ms-5 max-w-[25rem] w-full">
       <button type="button" onClick={handleSelectTask} className="me-3">

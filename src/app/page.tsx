@@ -2,6 +2,15 @@ import AddTask from "@/components/addTask";
 import Navbar from "@/components/navbar";
 import Navigate from "@/components/navigate";
 import TaskContent from "@/components/taskContent";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sigma - Home",
+  description: "to do list application home",
+  authors: [
+    { name: "patrio bimasuci", url: "https://github.com/patriobimasuci" },
+  ],
+};
 
 export default function Home() {
   return (
