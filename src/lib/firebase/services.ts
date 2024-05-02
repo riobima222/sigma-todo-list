@@ -106,11 +106,33 @@ export const addTask = async (data: AddTask) => {
 
   if (tasks.length > 0) {
     // Task exists, update the document
-    await updateDoc(doc(firestore, "task", tasks[0].id), {task: [...tasks[0].task, ...data.task]});
+    await updateDoc(doc(firestore, "task", tasks[0].id), {
+      task: [...tasks[0].task, ...data.task],
+    });
   } else {
     // Task doesn't exist, create a new document
     await addDoc(collection(firestore, "task"), data);
   }
 
   return { status: 200, message: "Task berhasil di tambahkan" };
+};
+
+//
+// GET TASK
+export const getTask = async (data: { username: string }) => {
+  const q = query(
+    collection(firestore, "task"),
+    where("username", "==", data.username)
+  );
+  try {
+    const snapshot = await getDocs(q);
+    const tasks: any = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    return tasks[0];
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
 };

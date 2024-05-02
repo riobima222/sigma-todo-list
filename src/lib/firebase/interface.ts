@@ -15,3 +15,14 @@ export interface AddTask {
   username: string;
   task: string[];
 }
+
+export interface AllTask {
+  username: string;
+  task: Task[];
+}
+
+interface Task {
+  title: string;
+  isDone: boolean;
+  createAt: Date;
+}

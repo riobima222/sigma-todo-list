@@ -7,9 +7,10 @@ import { CgAddR } from "react-icons/cg";
 export default function AddTask() {
   const { data: session }: any = useSession();
   const [alert, setAlert] = useState(false);
+  console.log(session);
   const handleAddTask = async (e: any) => {
     e.preventDefault();
-    const res = await fetch("/api/addTask", {
+    const res = await fetch("/api/addtask", {
       method: "POST",
       body: JSON.stringify({
         username: session?.user?.username || session?.user?.name,
@@ -29,7 +30,6 @@ export default function AddTask() {
         setAlert(false);
       }, 1000);
     }
-    console.log((await res.json()) || "gagal bro");
   };
   return (
     <div className="max-w-[37em] w-full">
