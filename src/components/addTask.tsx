@@ -1,15 +1,16 @@
 "use client";
 
+import { alertcontext } from "@/context/alert";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { CgAddR } from "react-icons/cg";
-
 export default function AddTask() {
   const { data: session }: any = useSession();
-  const [alert, setAlert] = useState(false);
-  console.log(session);
+  const { alert, setAlert }: any = useContext(alertcontext);
+  const [isLoading, setIsLoading] = useState(false);
   const handleAddTask = async (e: any) => {
     e.preventDefault();
+    setIsLoading(true);
     const res = await fetch("/api/addtask", {
       method: "POST",
       body: JSON.stringify({
@@ -24,11 +25,12 @@ export default function AddTask() {
       }),
     });
     if (res.ok) {
+      setIsLoading(false);
       e.target.task.value = "";
       setAlert(true);
       setTimeout(() => {
         setAlert(false);
-      }, 1000);
+      }, 2000);
     }
   };
   return (
@@ -52,7 +54,12 @@ export default function AddTask() {
             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
-        <span>Task berhasil di tambahkan!</span>
+        <span className="text-sm">Task berhasil di tambahkan!</span>
+      </div>
+      <div className="flex justify-center">
+        {isLoading && (
+          <span className="inline-block ms-4 loading loading-spinner text-info loading-xs"></span>
+        )}
       </div>
       <form
         onSubmit={(e) => handleAddTask(e)}
@@ -64,9 +71,14 @@ export default function AddTask() {
           type="text"
           placeholder="Enter your task.."
           maxLength={50}
+          minLength={10}
         />
-        <button type="submit" className="h-7 w-7 ms-2">
-          <CgAddR className="text-gray-400 text-xl md:hover:text-base duration-200" />
+        <button
+          disabled={isLoading || !session}
+          type="submit"
+          className="h-7 w-7 ms-2"
+        >
+          <CgAddR className="text-gray-400 text-xl" />
         </button>
       </form>
     </div>

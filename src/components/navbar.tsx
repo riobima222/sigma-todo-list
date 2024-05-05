@@ -48,7 +48,7 @@ export default function Navbar() {
               </p>
             </>
           ) : (
-            <span className="inline-block ms-4 loading loading-spinner text-info"></span>
+            <span className="inline-block ms-4 loading loading-spinner text-info loading-sm"></span>
           )}
         </div>
         {session ? (

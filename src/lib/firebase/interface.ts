@@ -21,7 +21,7 @@ export interface AllTask {
   task: Task[];
 }
 
-interface Task {
+export interface Task {
   title: string;
   isDone: boolean;
   createAt: Date;

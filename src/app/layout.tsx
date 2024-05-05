@@ -4,6 +4,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import NavigateProvider from "@/context/navigate";
+import AlertProvider from "@/context/alert";
 
 const poppinsFont = Poppins({
   subsets: ["latin"],
@@ -19,7 +20,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${poppinsFont.className} text-gray-950`}>
         <NavigateProvider>
-          <SessionProvider>{children}</SessionProvider>
+          <AlertProvider>
+            <SessionProvider>{children}</SessionProvider>
+          </AlertProvider>
         </NavigateProvider>
       </body>
     </html>
