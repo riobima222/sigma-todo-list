@@ -11,11 +11,15 @@ export default function Navbar() {
     <nav className="fixed z-10 justify-between sm:ps-2 flex items-center top-0 min-h-20 left-0 right-0 bg-[#acffea]">
       <div className="flex">
         <Link href={"/"}>
-          <PiBookBookmarkFill className="text-5xl pe-2" />
+          <PiBookBookmarkFill className="text-5xl sm:pe-2" />
         </Link>
         <div className="ps-2">
-          <h1 className="font-bold text-2xl">Sigma List</h1>
-          <h4 className="text-sm">Create your list</h4>
+          <h1 className="font-bold text-base sm:text-2xl">
+            Sigma <br className="block sm:hidden" /> List
+          </h1>
+          <h4 className="text-xs sm:text-sm">
+            Create <span className="hidden sm:inline">your</span> list
+          </h4>
         </div>
       </div>
       <div className="flex items-center">
@@ -56,14 +60,14 @@ export default function Navbar() {
             <button
               onClick={() => signOut()}
               type="button"
-              className="sm:hidden text-[#f6fff9] bg-[#6efb6e] font-bold m-1 me-2 ms-4 px-2 rounded-xl py-2"
+              className="sm:hidden text-[#f6fff9] bg-[#ed4444] font-bold m-1 me-2 ms-4 px-2 rounded-xl py-2"
             >
               Log <br /> Out
             </button>
             <button
               onClick={() => signOut()}
               type="button"
-              className="text-[#f6fff9] font-bold bg-[#6efb6e] px-4 py-1 ms-4 me-2 rounded-xl hidden sm:inline-block"
+              className="text-[#f6fff9] font-bold bg-[#ed4444] px-4 py-1 ms-4 me-2 rounded-xl hidden sm:inline-block"
             >
               Log Out
             </button>

@@ -16,7 +16,7 @@ export default function TaskContent() {
   const [tasks, setTasks]: any = useState("loading");
   const { alert }: any = useContext(alertcontext);
   const [trash, setTrash] = useState(false);
-  const [hist, setHist]: any = useState([]);
+  const [hist, setHist]: any = useState("loading");
   const [deleteAlert, setDeleteAlert] = useState(false);
   const [deleteRes, setDeleteRes] = useState(false);
   const [tickAlert, setTickAlert] = useState(false);
@@ -55,12 +55,17 @@ export default function TaskContent() {
             setTasks(task);
           });
       } else {
-        // fetch("/api/getHist")
-        //   .then((res) => res.json())
-        //   .then((hist) => {
-        //     setHist(hist);
-        //     console.log(hist);
-        //   });
+        fetch("/api/gethist", {
+          method: "POST",
+          body: JSON.stringify({
+            username: session?.user?.username || session?.user?.name,
+          }),
+          cache: "no-store",
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            setHist(res);
+          });
       }
     }
   }, [selectTask, selectHist, alert, trash, tick]);
@@ -137,14 +142,11 @@ export default function TaskContent() {
         <span className="text-sm">{deleteRes || tickRes}</span>
       </div>
       <section
-        className={`flex flex-col ${
-          tasks?.length === 0 ||
-          tasks == false ||
-          !selectTask ||
-          tasks == "loading"
+        className={`${
+          tasks?.length === 0 || tasks == false || tasks == "loading"
             ? "justify-center items-center"
             : ""
-        } gap-3 p-3 bg-gray-200 max-w-[25em] min-h-[9em] w-full rounded-xl leading-none overflow-hidden`}
+        } flex flex-col gap-3 p-3 bg-gray-200 max-w-[25em] min-h-[9em] w-full rounded-xl leading-none overflow-hidden`}
       >
         {selectTask ? (
           Array.isArray(tasks) && tasks?.length > 0 ? (
@@ -162,10 +164,10 @@ export default function TaskContent() {
                     <IoIosCheckmarkCircleOutline className={`text-2xl`} />
                   </button>
                   <div className="flex flex-col justify-between w-full mt-3">
-                    <h1 className="tracking-wide font-semibold pe-2">
+                    <h1 className="tracking-wide font-semibold pe-2 text-sm sm:text-base">
                       {task.title}
                     </h1>
-                    <p className="text-sm text-gray-500 pt-2 pb-1">
+                    <p className="text-xs sm:text-sm text-gray-500 pt-2 pb-1">
                       {task.createdAt}
                     </p>
                   </div>
@@ -188,11 +190,62 @@ export default function TaskContent() {
             </div>
           ) : (
             tasks === "loading" && (
-              <span className="loading loading-spinner loading-xs text-info"></span>
+              <>
+                <span className="loading loading-spinner loading-xs text-info"></span>
+                <span className="text-xs text-gray-500">Loading...</span>
+              </>
             )
           )
+        ) : hist?.data?.length > 0 ? (
+          <div className={`flex flex-col gap-3`}>
+            {hist.data.map((task: any, i: number) => (
+              <div
+                key={i}
+                className="flex justify-between items-center bg-white rounded-lg px-1"
+              >
+                <div className="flex items-center w-full">
+                  <button
+                    disabled={tick}
+                    onClick={() => {}}
+                    className="w-7 h-7 me-1 flex mt-1"
+                  >
+                    <IoIosCheckmarkCircleOutline
+                      className={`text-2xl text-[#4bf19e]`}
+                    />
+                  </button>
+                  <div className="flex flex-col justify-between w-full mt-3">
+                    <h1 className="tracking-wide font-semibold pe-2 text-sm sm:text-base">
+                      {task.title}
+                    </h1>
+                    <p className="text-sm text-gray-500 pt-2 pb-1">
+                      {task.createdAt}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleDelete(task.title)}
+                  disabled={trash}
+                  className="flex justify-center items-center h-6 w-6"
+                >
+                  <FaTrashCan className="text-[#ed4444]" />
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : hist.message == "notfound" ? (
+          <div className="flex justify-center items-center min-h-[7.5em]">
+            <ImFilesEmpty className="text-gray-500" />
+            <span className="text-gray-500 text-sm ms-2">
+              Task Masih Kosong
+            </span>
+          </div>
         ) : (
-          <span className="loading loading-xs loading-spinner text-info"></span>
+          <div
+            className={`flex gap-3 flex-col justify-center items-center min-h-[7.5em]`}
+          >
+            <span className="loading loading-spinner loading-xs text-info"></span>
+            <span className="text-xs text-gray-500">Loading...</span>
+          </div>
         )}
       </section>
     </div>

@@ -24,5 +24,5 @@ export interface AllTask {
 export interface Task {
   title: string;
   isDone: boolean;
-  createAt: Date;
+  createdAt: Date;
 }

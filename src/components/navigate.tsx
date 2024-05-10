@@ -3,8 +3,10 @@ import { MdHistory } from "react-icons/md";
 import { FaTasks } from "react-icons/fa";
 import { useContext } from "react";
 import { navigatecontext } from "@/context/navigate";
+import { useSession } from "next-auth/react";
 
 export default function Navigate() {
+  const { data: session } = useSession();
   const { selectHist, selectTask, handleSelectHist, handleSelectTask }: any =
     useContext(navigatecontext);
   return (
@@ -24,6 +26,7 @@ export default function Navigate() {
         </div>
       </button>
       <button
+        disabled={!session}
         type="button"
         onClick={handleSelectHist}
         className="h-11 items-center"

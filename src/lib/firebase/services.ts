@@ -191,3 +191,26 @@ export const taskDone = async (data: { username: string; title: string }) => {
     return false;
   }
 };
+
+export const getHist = async (data: { username: string }) => {
+  const q = query(
+    collection(firestore, "task"),
+    where("username", "==", data.username)
+  );
+  try {
+    const snapshot = await getDocs(q);
+    const tasks: any = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    const histData = tasks[0].task.filter((task: Task) => task.isDone);
+
+    if (histData.length > 0) {
+      return histData;
+    } else {
+      return "notfound";
+    }
+  } catch (error) {
+    return false;
+  }
+};
