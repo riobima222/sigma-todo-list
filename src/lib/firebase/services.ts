@@ -1,7 +1,6 @@
 import {
   addDoc,
   collection,
-  deleteDoc,
   doc,
   getDocs,
   getFirestore,
@@ -12,6 +11,7 @@ import {
 import app from "./init";
 import { AddTask, LoginUser, RegisterUser, Task } from "./interface";
 import bcrypt from "bcrypt";
+import { getMonth } from "@/utils/getMonth";
 
 const firestore = getFirestore(app);
 
@@ -135,7 +135,15 @@ export const getTask = async (data: { username: string }) => {
       const filteredTasks = taskData[0].task.filter(
         (task: any) => !task.isDone
       );
-      return filteredTasks;
+      const fixTasks = filteredTasks.map((task: any) => {
+        const date = new Date(task.createdAt);
+        const month = getMonth(date.getMonth() + 1);
+        return {
+          ...task,
+          createdAt: `created: ${date.getDate()} - ${month} - ${date.getFullYear()}`,
+        };
+      });
+      return fixTasks;
     } else return false;
   } catch (err) {
     console.log("Ini adalah error nya : ", err);

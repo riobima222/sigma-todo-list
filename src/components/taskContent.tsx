@@ -22,7 +22,6 @@ export default function TaskContent() {
   const [tickAlert, setTickAlert] = useState(false);
   const [tick, setTick] = useState(false);
   const [tickRes, setTickRes] = useState(false);
-  const [tickColor, setTickColor] = useState(false);
 
   useEffect(() => {
     if (session) {
@@ -146,7 +145,11 @@ export default function TaskContent() {
           tasks?.length === 0 || tasks == false || tasks == "loading"
             ? "justify-center items-center"
             : ""
-        } flex flex-col gap-3 p-3 bg-gray-200 max-w-[25em] min-h-[9em] w-full rounded-xl leading-none overflow-hidden`}
+        } ${
+          hist?.data?.length == 1 && selectHist
+            ? "items-stretch justify-start"
+            : ""
+        } flex flex-col gap-3 p-3 bg-gray-200 max-w-[25em] w-full min-h-[9em] rounded-xl leading-none overflow-hidden`}
       >
         {selectTask ? (
           Array.isArray(tasks) && tasks?.length > 0 ? (
@@ -236,7 +239,7 @@ export default function TaskContent() {
           <div className="flex justify-center items-center min-h-[7.5em]">
             <ImFilesEmpty className="text-gray-500" />
             <span className="text-gray-500 text-sm ms-2">
-              Task Masih Kosong
+              History Masih Kosong
             </span>
           </div>
         ) : (
