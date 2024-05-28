@@ -30,7 +30,7 @@ export default function TaskContent() {
 
   useEffect(() => {
     if (session) {
-      fetch("/api/gettask", {
+      fetch(`/api/gettask`, {
         method: "POST",
         body: JSON.stringify({
           username: session?.user?.username || session?.user?.name,
@@ -47,7 +47,7 @@ export default function TaskContent() {
   useEffect(() => {
     if (session) {
       if (selectTask) {
-        fetch("/api/gettask", {
+        fetch(`/api/gettask`, {
           method: "POST",
           body: JSON.stringify({
             username: session?.user?.username || session?.user?.name,
@@ -59,7 +59,7 @@ export default function TaskContent() {
             setTasks(task);
           });
       } else {
-        fetch("/api/gethist", {
+        fetch(`/api/gethist`, {
           method: "POST",
           body: JSON.stringify({
             username: session?.user?.username || session?.user?.name,
@@ -98,7 +98,7 @@ export default function TaskContent() {
     setConfirmAppear(false);
     if (selectTask) {
       if (!trashButton) {
-        const res = await fetch("/api/taskdone", {
+        const res: any = await fetch(`/api/taskdone`, {
           method: "POST",
           body: JSON.stringify({
             username: session?.user?.username || session?.user?.name,
@@ -117,7 +117,7 @@ export default function TaskContent() {
           }, 3000);
         }
       } else {
-        const res = await fetch("/api/deletetask", {
+        const res: any = await fetch(`/api/deletetask`, {
           method: "POST",
           body: JSON.stringify({
             username: session?.user?.username || session?.user?.name,
@@ -138,7 +138,7 @@ export default function TaskContent() {
         }
       }
     } else {
-      const res = await fetch("/api/deletehist", {
+      const res: any = await fetch(`/api/deletehist`, {
         method: "POST",
         body: JSON.stringify({
           username: session?.user?.username || session?.user?.name,

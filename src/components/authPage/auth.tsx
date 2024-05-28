@@ -31,7 +31,7 @@ export default function Auth(props: Props) {
         password: event.target.password ? event.target.password.value : "",
         gender: event.target.gender.value || "",
       };
-      fetch("/api/auth/register", {
+      fetch(`/api/auth/register`, {
         method: "POST",
         body: JSON.stringify(user),
       })

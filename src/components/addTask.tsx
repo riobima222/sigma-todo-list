@@ -11,7 +11,7 @@ export default function AddTask() {
   const handleAddTask = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
-    const res = await fetch("/api/addtask", {
+    const res: any = await fetch(`/api/addtask`, {
       method: "POST",
       body: JSON.stringify({
         username: session?.user?.username || session?.user?.name,
