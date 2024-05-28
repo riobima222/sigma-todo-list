@@ -8,7 +8,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 export default function Navbar() {
   const { data: session }: any = useSession();
   return (
-    <nav className="fixed z-10 justify-between sm:ps-2 flex items-center top-0 min-h-20 left-0 right-0 bg-[#acffea]">
+    <nav className="flex fixed z-10 justify-between sm:ps-2  items-center top-0 min-h-20 left-0 right-0 bg-[#acffea]">
       <div className="flex">
         <Link href={"/"}>
           <PiBookBookmarkFill className="text-5xl sm:pe-2" />

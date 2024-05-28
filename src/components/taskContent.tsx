@@ -18,10 +18,15 @@ export default function TaskContent() {
   const [trash, setTrash] = useState(false);
   const [hist, setHist]: any = useState("loading");
   const [deleteAlert, setDeleteAlert] = useState(false);
+  const [deleteWarning, setDeleteWarning] = useState(false);
   const [deleteRes, setDeleteRes] = useState(false);
   const [tickAlert, setTickAlert] = useState(false);
   const [tick, setTick] = useState(false);
   const [tickRes, setTickRes] = useState(false);
+  const [confirmMessage, setConfirmMessage] = useState("");
+  const [confirmAppear, setConfirmAppear] = useState(false);
+  const [taskTitle, setTaskTitle] = useState("");
+  const [trashButton, setTrashButton] = useState(false);
 
   useEffect(() => {
     if (session) {
@@ -71,45 +76,99 @@ export default function TaskContent() {
 
   const handleTick = async (title: string) => {
     setTick(true);
-    const res = await fetch("/api/taskdone", {
-      method: "POST",
-      body: JSON.stringify({
-        username: session?.user?.username || session?.user?.name,
-        title,
-      }),
-    });
-    if (res.ok) {
-      setTick(false);
-      const data = await res.json();
-      setTickAlert(true);
-      setTickRes(data.message);
-      setTimeout(() => {
-        setTickAlert(false);
-        setTickRes(false);
-      }, 3000);
-    }
+    setTrash(true);
+    setConfirmAppear(true);
+    setConfirmMessage("is the task finished ?");
+    setTaskTitle(title);
   };
   const handleDelete = async (title: string) => {
     setTrash(true);
-    const res = await fetch("/api/deletetask", {
-      method: "POST",
-      body: JSON.stringify({
-        username: session?.user?.username || session?.user?.name,
-        title,
-      }),
-    });
-    if (res.ok) {
-      const data = await res.json();
-      setTrash(false);
-      setDeleteRes(data.message);
-      setDeleteAlert(true);
-      setTimeout(() => {
-        setDeleteAlert(false);
-        setDeleteRes(false);
-      }, 3000);
+    setTick(true);
+    setConfirmAppear(true);
+    setTrashButton(true);
+    setTaskTitle(title);
+    if (selectTask) {
+      setConfirmMessage("Delete this task ?");
+    } else {
+      setConfirmMessage("Delete this history ?");
     }
   };
 
+  const handleAccept = async () => {
+    setConfirmAppear(false);
+    if (selectTask) {
+      if (!trashButton) {
+        const res = await fetch("/api/taskdone", {
+          method: "POST",
+          body: JSON.stringify({
+            username: session?.user?.username || session?.user?.name,
+            title: taskTitle,
+          }),
+        });
+        if (res.ok) {
+          setTick(false);
+          setTrash(false);
+          const data = await res.json();
+          setTickAlert(true);
+          setTickRes(data.message);
+          setTimeout(() => {
+            setTickAlert(false);
+            setTickRes(false);
+          }, 3000);
+        }
+      } else {
+        const res = await fetch("/api/deletetask", {
+          method: "POST",
+          body: JSON.stringify({
+            username: session?.user?.username || session?.user?.name,
+            title: taskTitle,
+          }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setTrashButton(false);
+          setTrash(false);
+          setTick(false);
+          setDeleteRes(data.message);
+          setDeleteAlert(true);
+          setTimeout(() => {
+            setDeleteAlert(false);
+            setDeleteRes(false);
+          }, 3000);
+        }
+      }
+    } else {
+      const res = await fetch("/api/deletehist", {
+        method: "POST",
+        body: JSON.stringify({
+          username: session?.user?.username || session?.user?.name,
+          title: taskTitle,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setTrash(false);
+        setTick(false);
+        setDeleteRes(data.message);
+        if (data.status === true) {
+          setDeleteAlert(true);
+        } else {
+          setDeleteWarning(true);
+        }
+        setTimeout(() => {
+          setDeleteAlert(false);
+          setDeleteWarning(false);
+          setDeleteRes(false);
+        }, 3000);
+      }
+    }
+  };
+  const handleDeny = () => {
+    setTrash(false);
+    setTick(false);
+    setConfirmAppear(false);
+    setConfirmMessage("");
+  };
   return (
     <div className="mt-2 max-w-[25em] min-h-[9em] w-full">
       <div className="flex justify-center">
@@ -140,6 +199,25 @@ export default function TaskContent() {
         </svg>
         <span className="text-sm">{deleteRes || tickRes}</span>
       </div>
+      <div
+        role="alert"
+        className={`alert alert-warning ${!deleteWarning ? "hidden" : "flex"}`}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="stroke-current shrink-0 h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
+        </svg>
+        <span>{deleteRes}</span>
+      </div>
       <section
         className={`${
           tasks?.length === 0 || tasks == false || tasks == "loading"
@@ -149,6 +227,8 @@ export default function TaskContent() {
           hist?.data?.length == 1 && selectHist
             ? "items-stretch justify-start"
             : ""
+        } ${
+          selectHist && "justify-center items-center"
         } flex flex-col gap-3 p-3 bg-gray-200 max-w-[25em] w-full min-h-[9em] rounded-xl leading-none overflow-hidden`}
       >
         {selectTask ? (
@@ -200,7 +280,7 @@ export default function TaskContent() {
             )
           )
         ) : hist?.data?.length > 0 ? (
-          <div className={`flex flex-col gap-3`}>
+          <div className={`flex flex-col gap-3 w-full min-h-[7em]`}>
             {hist.data.map((task: any, i: number) => (
               <div
                 key={i}
@@ -235,7 +315,7 @@ export default function TaskContent() {
               </div>
             ))}
           </div>
-        ) : hist.message == "notfound" ? (
+        ) : hist.message ? (
           <div className="flex justify-center items-center min-h-[7.5em]">
             <ImFilesEmpty className="text-gray-500" />
             <span className="text-gray-500 text-sm ms-2">
@@ -251,6 +331,38 @@ export default function TaskContent() {
           </div>
         )}
       </section>
+      <div
+        role="alert"
+        className={`${
+          confirmAppear ? "flex" : "hidden"
+        } alert absolute bottom-0 right-0 w-[100%] flex sm:w-[59%] justify-between`}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          className="stroke-info shrink-0 w-6 h-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
+        <span className="text-sm">{confirmMessage}</span>
+        <div className="flex">
+          <button className="btn btn-sm" onClick={handleDeny}>
+            No
+          </button>
+          <button
+            className="btn btn-sm btn-primary ms-2"
+            onClick={handleAccept}
+          >
+            yes
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

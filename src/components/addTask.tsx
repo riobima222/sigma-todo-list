@@ -18,7 +18,6 @@ export default function AddTask() {
         task: [
           {
             title: e.target.task.value,
-            isDone: false,
             createdAt: new Date(),
           },
         ],
