@@ -132,9 +132,7 @@ export const getTask = async (data: { username: string }) => {
       ...doc.data(),
     }));
     if (taskData.length > 0) {
-      const filteredTasks = taskData[0].task.filter(
-        (task: any) => !task.isDone
-      );
+      const filteredTasks = taskData[0].task;
       const fixTasks = filteredTasks.map((task: any) => {
         const date = new Date(task.createdAt);
         const month = getMonth(date.getMonth() + 1);
@@ -174,6 +172,29 @@ export const deleteTask = async (data: { username: string; title: string }) => {
   }
 };
 
+export const deleteHist = async (data: { username: string; title: string }) => {
+  const q = query(
+    collection(firestore, "task"),
+    where("username", "==", data.username)
+  );
+  try {
+    const snapshot = await getDocs(q);
+    const taskData: any = snapshot.docs.map((doc: any) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    const newTaskDone = taskData[0].taskDone.filter(
+      (taskDone: any) => taskDone.title !== data.title
+    );
+    await updateDoc(doc(firestore, "task", taskData[0].id), {
+      taskDone: newTaskDone,
+    });
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
 export const taskDone = async (data: { username: string; title: string }) => {
   const q = query(
     collection(firestore, "task"),
@@ -185,15 +206,24 @@ export const taskDone = async (data: { username: string; title: string }) => {
     ...doc.data(),
   }));
   const newTask = tasks[0].task;
-  newTask.forEach((task: Task) => {
-    if (task.title === data.title) {
-      task.isDone = true;
-    }
+  const fixTasks = newTask.filter((task: any) => task.title !== data.title);
+  const taskOke = newTask.filter((task: any) => task.title === data.title);
+  taskOke.forEach((task: any) => {
+    task.createdAt = new Date().toISOString();
   });
   try {
     await updateDoc(doc(firestore, "task", tasks[0].id), {
-      task: newTask,
+      task: fixTasks,
     });
+    if (!tasks[0].taskDone) {
+      await updateDoc(doc(firestore, "task", tasks[0].id), {
+        taskDone: taskOke,
+      });
+    } else {
+      await updateDoc(doc(firestore, "task", tasks[0].id), {
+        taskDone: [...tasks[0].taskDone, ...taskOke] || "ada yang salah",
+      });
+    }
     return true;
   } catch (error) {
     return false;
@@ -211,7 +241,12 @@ export const getHist = async (data: { username: string }) => {
       id: doc.id,
       ...doc.data(),
     }));
-    const histData = tasks[0].task.filter((task: Task) => task.isDone);
+    const histData = tasks[0].taskDone;
+    histData.forEach((hist: { title: string; createdAt: string }) => {
+      const date = new Date(hist.createdAt);
+      const month = getMonth(date.getMonth() + 1);
+      hist.createdAt = `Done: ${date.getDate()} - ${month} - ${date.getFullYear()}`;
+    });
 
     if (histData.length > 0) {
       return histData;

@@ -3,6 +3,8 @@ import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
   const data = await req.json();
+  console.log("sedang berjalan");
+  console.log(data);
   const res = await taskDone(data);
   if (!res) {
     return NextResponse.json({

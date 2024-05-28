@@ -8,7 +8,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 export default function Navbar() {
   const { data: session }: any = useSession();
   return (
-    <nav className="fixed z-10 justify-between sm:ps-2 flex items-center top-0 min-h-20 left-0 right-0 bg-[#acffea]">
+    <nav className="flex fixed z-10 justify-between sm:ps-2  items-center top-0 min-h-20 left-0 right-0 bg-[#acffea]">
       <div className="flex">
         <Link href={"/"}>
           <PiBookBookmarkFill className="text-5xl sm:pe-2" />
@@ -31,8 +31,8 @@ export default function Navbar() {
                   className="rounded-full"
                   src={session.user?.image || "/images/profile-man.png"}
                   alt="Profile images"
-                  width={50}
-                  height={50}
+                  width={37}
+                  height={37}
                 />
               ) : (
                 <Image
@@ -43,11 +43,11 @@ export default function Navbar() {
                       : "/images/profile-woman.png"
                   }`}
                   alt="Profile images"
-                  width={50}
-                  height={50}
+                  width={37}
+                  height={37}
                 />
               )}
-              <p className="flex justify-center text-sm mt-1 mb-1 tracking-widest">
+              <p className="flex w-24 text-center justify-center text-sm mt-1 mb-1 tracking-widest">
                 {session.user?.username || session.user?.name}
               </p>
             </>

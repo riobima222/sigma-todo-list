@@ -25,7 +25,6 @@ export default function Auth(props: Props) {
     setIsLoading(true);
     if (!props.isLogin) {
       // register click
-      console.log("register");
       const user = {
         username: event.target.username.value || "",
         email: event.target.email ? event.target.email.value : "",
@@ -39,9 +38,11 @@ export default function Auth(props: Props) {
         .then((res) => res.json())
         .then((res) => {
           setMessage(res.message);
-          if (res.status) {
-            router.push("/auth/login");
-          }
+          setTimeout(() => {
+            if (res.status) {
+              router.push("/auth/login");
+            }
+          }, 2000);
           setIsLoading(false);
           event.target.username.value = "";
           event.target.email.value = "";
@@ -51,19 +52,16 @@ export default function Auth(props: Props) {
     } else {
       // login click
       setMessage("");
-      console.log("login");
       const res = await signIn("credentials", {
         redirect: false,
         email: event.target.email.value,
         password: event.target.password.value,
         callbackUrl: "/",
       });
-      console.log(res);
       if (res?.ok) {
         setIsLoading(false);
         setMessage("Berhasil login");
         setButtonDisable(true);
-        console.log("berhasil");
         router.push("/");
       } else {
         console.log("gagal");
@@ -103,6 +101,8 @@ export default function Auth(props: Props) {
             name="username"
             placeholder="username"
             className="border border-gray-300 p-2 w-full rounded-md focus:outline-none"
+            maxLength={10}
+            minLength={3}
             required
           />
         )}
