@@ -11,7 +11,8 @@ export default function AddTask() {
   const handleAddTask = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
-    const res: any = await fetch(`/api/addtask`, {
+    console.log({ title: e.target.task.value });
+    const res = await fetch(`/api/addtask`, {
       method: "POST",
       body: JSON.stringify({
         username: session?.user?.username || session?.user?.name,
@@ -24,7 +25,8 @@ export default function AddTask() {
       }),
     });
     if (res.ok) {
-      console.log("berjalan dengan baik kawan")
+      console.log("berjalan dengan baik kawan");
+      const data = await res.json();
       setIsLoading(false);
       e.target.task.value = "";
       setAlert(true);
@@ -33,7 +35,12 @@ export default function AddTask() {
       }, 2000);
     } else {
       console.log("ada yang salah");
-      console.log(res);
+      try {
+        const data = await res.json();
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
   return (

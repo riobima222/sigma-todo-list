@@ -104,18 +104,23 @@ export const addTask = async (data: AddTask) => {
     id: doc.id,
     ...doc.data(),
   }));
-
-  if (tasks.length > 0) {
-    // Task exists, update the document
-    await updateDoc(doc(firestore, "task", tasks[0].id), {
-      task: [...tasks[0].task, ...data.task],
-    });
-  } else {
-    // Task doesn't exist, create a new document
-    await addDoc(collection(firestore, "task"), data);
+  
+  try {
+    if (tasks.length > 0) {
+      console.log("ada task");
+      // Task exists, update the document
+      await updateDoc(doc(firestore, "task", tasks[0].id), {
+        task: [...tasks[0].task, ...data.task],
+      });
+    } else {
+      console.log("tidak ada task");
+      // Task doesn't exist, create a new document
+      await addDoc(collection(firestore, "task"), data);
+    }
+    return { status: 200, message: "Task berhasil di tambahkan" };
+  } catch (error) {
+    return { status: 400, error };
   }
-
-  return { status: 200, message: "Task berhasil di tambahkan" };
 };
 
 //
