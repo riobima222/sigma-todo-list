@@ -24,12 +24,16 @@ export default function AddTask() {
       }),
     });
     if (res.ok) {
+      console.log("berjalan dengan baik kawan")
       setIsLoading(false);
       e.target.task.value = "";
       setAlert(true);
       setTimeout(() => {
         setAlert(false);
       }, 2000);
+    } else {
+      console.log("ada yang salah");
+      console.log(res);
     }
   };
   return (
