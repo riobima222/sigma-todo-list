@@ -30,6 +30,9 @@ export default function AddTask() {
       setTimeout(() => {
         setAlert(false);
       }, 2000);
+    } else {
+      console.log("ada yang salah");
+      console.log(res);
     }
   };
   return (
