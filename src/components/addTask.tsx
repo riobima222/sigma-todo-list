@@ -11,7 +11,8 @@ export default function AddTask() {
   const handleAddTask = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
-    console.log({ title: e.target.task.value });
+    console.log("percobaan saya sangat berat ya")
+    const createdAt = new Date();
     const res = await fetch(`/api/addtask`, {
       method: "POST",
       body: JSON.stringify({
@@ -19,14 +20,12 @@ export default function AddTask() {
         task: [
           {
             title: e.target.task.value,
-            createdAt: new Date(),
+            createdAt: createdAt.toISOString(),
           },
         ],
       }),
     });
     if (res.ok) {
-      console.log("berjalan dengan baik kawan");
-      const data = await res.json();
       setIsLoading(false);
       e.target.task.value = "";
       setAlert(true);
@@ -34,13 +33,9 @@ export default function AddTask() {
         setAlert(false);
       }, 2000);
     } else {
-      console.log("ada yang salah");
-      try {
-        const data = await res.json();
-        console.log(data);
-      } catch (error) {
-        console.error(error);
-      }
+      console.log(res);
+      const data = await res.json();
+      console.log(data);
     }
   };
   return (

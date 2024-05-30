@@ -168,6 +168,7 @@ export default function TaskContent() {
     setTick(false);
     setConfirmAppear(false);
     setConfirmMessage("");
+    setTrashButton(false);
   };
   return (
     <div className="mt-2 max-w-[25em] min-h-[9em] w-full">

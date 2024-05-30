@@ -104,7 +104,6 @@ export const addTask = async (data: AddTask) => {
     id: doc.id,
     ...doc.data(),
   }));
-  
   try {
     if (tasks.length > 0) {
       console.log("ada task");
