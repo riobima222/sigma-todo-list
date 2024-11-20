@@ -45,25 +45,26 @@ npm install
 Konfigurasi Firebase:
 
 🔧 Buat proyek di Firebase Console.
+
 Aktifkan Cloud Firestore untuk menyimpan data tugas.
 Buat file .env.local di root folder proyek dan tambahkan konfigurasi Firebase Anda:
 
-env
-Copy code
+
+```bash
 NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-auth-domain
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-storage-bucket
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
 NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
+```
 Konfigurasi NextAuth:
-
 🔑 Tambahkan secret key untuk NextAuth di file .env.local:
 
-env
-Copy code
+```bash
 NEXTAUTH_SECRET=your-secret-key
 NEXTAUTH_URL=http://localhost:3000
+```
 Sesuaikan provider autentikasi di file NextAuth jika diperlukan.
 
 Jalankan aplikasi:
